@@ -18,12 +18,12 @@ describe('# COMMON ERRORS', () => {
                 expect(res.body.msg).toBe("Path Not Found");
             });
     });
-    test('400: Invalid Query Type', () => {
+    test('400: Invalid Data Type', () => {
         return request(app)
             .get('/api/articles/not_an_id')
             .expect(400)
             .then(res => {
-                expect(res.body.msg).toBe("Invalid Query Type");
+                expect(res.body.msg).toBe("Invalid Data Type");
             });
     });
 });
@@ -45,9 +45,9 @@ describe('# GET REQUESTS', () => {
         });
     });
 
-    describe('GET /api/atricles/:article_id', () => {
+    describe('GET /api/articles/:article_id', () => {
 
-        test('200: Returns list of articles', () => {
+        test('200: returns article at article_id', () => {
             return request(app)
                 .get('/api/articles/1')
                 .expect(200)
@@ -59,7 +59,7 @@ describe('# GET REQUESTS', () => {
                         expect(article).toMatchObject({
                         author: expect.any(String),
                         title: expect.any(String),
-                        article_id: expect.any(Number),
+                        article_id: 1,
                         body: expect.any(String),
                         topic: expect.any(String),
                         created_at: expect.any(String),
