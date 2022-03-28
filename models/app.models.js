@@ -22,6 +22,16 @@ exports.selectArticles = (id) => {
         });
 }
 
+exports.selectUsers = () => {
+
+    const query = `SELECT username FROM users;`;
+
+    return db.query(query)
+        .then(res => {
+            return res.rows;
+        });
+}
+
 
 exports.updateArticle = (id, adjustedVotes) => {
 
