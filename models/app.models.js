@@ -3,9 +3,9 @@ const format = require('pg-format');
 
 exports.selectTopics = () => {
 
-    const q = `SELECT * FROM topics;`;
+    const query = `SELECT * FROM topics;`;
 
-    return db.query(q)
+    return db.query(query)
         .then(res => {
             return res.rows;
         });
