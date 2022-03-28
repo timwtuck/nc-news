@@ -8,7 +8,20 @@ const seed = require('../db/seeds/seed.js');
 afterAll(() => db.end());
 beforeEach(() => seed(testData));
 
+describe('# COMMON ERRORS', () => {
+
+    test('404: Path Not Found', () => {
+        return request(app)
+            .get('/api/invalid_path')
+            .expect(404)
+            .then(res => {
+                expect(res.body.msg).toBe("Path Not Found");
+            });
+    });
+});
+
 describe('# GET REQUESTS', () => {
+
     describe('GET /api/topics', () => {
         test('200: Returns list of topics', () => {
             return request(app)
