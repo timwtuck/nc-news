@@ -14,6 +14,11 @@ exports.selectTopics = () => {
 
 exports.updateArticle = (id, adjustedVotes) => {
 
+    // catch invalid object errors
+    if (typeof adjustedVotes !== 'number'){
+        return Promise.reject({status: 400, msg: "Invalid Object"});
+    }
+
     let query = `SELECT votes FROM articles
                     WHERE article_id = $1;`;
                     

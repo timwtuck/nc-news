@@ -11,5 +11,6 @@ app.get('/api/topics', c.getTopics);
 app.patch('/api/articles/:article_id', c.patchArticle)
 
 app.use(errors.pathNotFound);
+app.use(errors.customError);
 
 module.exports = app;

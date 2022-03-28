@@ -65,6 +65,16 @@ describe.only('# PATCH REQUESTS', () => {
                     expect(article.votes).toBe(0);
                 });
         });
+        test('400: Invalid object throws bad request', () => {
+            const patch = {};
+            return request(app)
+                .patch('/api/articles/1')
+                .send(patch)
+                .expect(400)
+                .then(res => {
+                    expect(res.body.msg).toBe("Invalid Object");
+                });
+        })
     });
 });
 
