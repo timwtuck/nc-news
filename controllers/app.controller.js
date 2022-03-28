@@ -8,3 +8,15 @@ exports.getTopics = (req, res, next) => {
             res.status(200).send({topics});
         });
 };
+
+exports.patchArticle = (req, res, next) => {
+
+    const {article_id} = req.params;
+    const updateObj = req.body;
+
+    m.updateArticle(article_id, updateObj.inc_votes)
+        .then(article => {
+            res.status(200).send({article});
+        })
+        .catch(next);
+}

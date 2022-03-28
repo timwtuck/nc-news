@@ -37,3 +37,34 @@ describe('# GET REQUESTS', () => {
         });
     });
 });
+
+describe.only('# PATCH REQUESTS', () => {
+
+    describe('PATCH /api/articles/:article_id', () => {
+        test('200: Returns patched article when increasing votes', () => { 
+            const patch = {inc_votes: 1};
+            return request(app)
+                .patch('/api/articles/1')
+                .send(patch)
+                .expect(200)
+                .then(res => {
+                    const article = res.body.article;
+                    expect(article.article_id).toBe(1);
+                    expect(article.votes).toBe(101);
+                });
+        });
+        test('200: Returns patched article when decreasing votes', () => {
+            const patch = {inc_votes: -100};
+            return request(app)
+                .patch('/api/articles/1')
+                .send(patch)
+                .expect(200)
+                .then(res => {
+                    const article = res.body.article;
+                    expect(article.article_id).toBe(1);
+                    expect(article.votes).toBe(0);
+                });
+        });
+    });
+});
+
