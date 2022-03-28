@@ -18,6 +18,14 @@ describe('# COMMON ERRORS', () => {
                 expect(res.body.msg).toBe("Path Not Found");
             });
     });
+    test('400: Invalid Query Type', () => {
+        return request(app)
+            .get('/api/articles/not_an_id')
+            .expect(400)
+            .then(res => {
+                expect(res.body.msg).toBe("Invalid Query Type");
+            });
+    });
 });
 
 describe('# GET REQUESTS', () => {

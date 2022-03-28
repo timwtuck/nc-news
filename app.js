@@ -7,6 +7,9 @@ const app = express();
 app.get('/api/topics', c.getTopics);
 app.get('/api/articles/:article_id', c.getArticles)
 
+// errors
 app.use(errors.pathNotFound);
+app.use(errors.psql_invalidType);
+
 
 module.exports = app;
