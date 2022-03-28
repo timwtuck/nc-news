@@ -9,4 +9,15 @@ exports.selectTopics = () => {
         .then(res => {
             return res.rows;
         });
+};
+
+exports.selectArticles = (id) => {
+
+    const query =  `SELECT * FROM articles
+                    WHERE article_id = $1;`;
+
+    return db.query(query, [id])
+        .then(res => {
+            return res.rows;
+        });
 }

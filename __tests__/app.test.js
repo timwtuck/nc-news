@@ -36,4 +36,28 @@ describe('# GET REQUESTS', () => {
                 });
         });
     });
+
+    describe('GET /api/atricles/:article_id', () => {
+
+        test('200: Returns list of articles', () => {
+            return request(app)
+                .get('/api/articles/1')
+                .expect(200)
+                .then(res => {
+                    const articles = res.body.articles;
+                    articles.forEach(article => {
+                        
+                        // check object properties
+                        expect(article).toMatchObject({
+                        author: expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        body: expect.any(String),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number)});
+                    });
+                });
+        });
+    });
 });
