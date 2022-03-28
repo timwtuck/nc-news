@@ -4,10 +4,21 @@ exports.getTopics = (req, res, next) => {
 
     m.selectTopics()
         .then(topics => {
-            console.log(topics);
             res.status(200).send({topics});
         });
 };
+
+exports.getArticles = (req, res, next) => {
+
+    const {article_id} = req.params;
+
+    m.selectArticles(article_id)
+        .then(articles => {
+            console.log(articles);
+            res.status(200).send({articles});
+        })
+        .catch(next);
+}
 
 exports.patchArticle = (req, res, next) => {
 
@@ -17,6 +28,6 @@ exports.patchArticle = (req, res, next) => {
     m.updateArticle(article_id, updateObj.inc_votes)
         .then(article => {
             res.status(200).send({article});
-        })
+            })
         .catch(next);
 }
