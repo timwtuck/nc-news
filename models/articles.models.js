@@ -9,7 +9,7 @@ const errors = require('../errors.js');
 
 exports.selectArticle = async (id) => {
 
-    promises = [];
+    const promises = [];
     promises.push(this._selectByArticleId(id));
     promises.push(commentsModel.selectByArticleId(id));
 
@@ -18,19 +18,32 @@ exports.selectArticle = async (id) => {
     return article;
 }
 
+exports.selectAllArticles = async () => {
+    
+    const ids = await this._selectAllArticleIDs();
+    const promises = [];
+
+    ids.forEach(id => 
+        promises.push(this.selectArticle(id.article_id)));
+
+    const articles = await Promise.all(promises);
+
+    return articles;
+}
+
 
 exports.updateArticle = async (id, adjustedVotes) => {
 
     query = `UPDATE articles
             SET votes = votes + $1
             WHERE article_id = $2
-            RETURNING *;`;
+            RETURNING *;`
 
     const res = await db.query(query, [adjustedVotes, id]);
 
     if (res.rows.length == 0)
         return Promise.reject(errors.idNotFoundObj);
-        
+
     return res.rows[0];
 }
 
@@ -50,4 +63,15 @@ exports._selectByArticleId = async (id) => {
         return Promise.reject(errors.idNotFoundObj);
 
     return res.rows[0];
+}
+
+exports._selectAllArticleIDs = async (sorted_by='created_at', asc=false) => {
+
+    const query = `SELECT article_id FROM articles
+                    ORDER BY %I ${asc ? 'ASC' : 'DESC'};`;
+    
+    const sql = format(query, sorted_by);
+
+    const results = await db.query(sql);
+    return results.rows;
 }
