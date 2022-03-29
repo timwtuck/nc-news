@@ -47,7 +47,7 @@ describe('# GET REQUESTS', () => {
 
     describe('GET /api/articles/:article_id', () => {
 
-        test.only('200: returns article at article_id', () => {
+        test('200: returns article at article_id', () => {
             return request(app)
                 .get('/api/articles/1')
                 .expect(200)
@@ -65,7 +65,17 @@ describe('# GET REQUESTS', () => {
                         comment_count: 11});
                 });
             });
+
+        test('404: ID not found when given valid non-existent id', () => {
+            return request(app)
+                .get('/api/articles/100000')
+                .expect(404)
+                .then(res => {
+                    console.log(res.body)
+                    expect(res.body.msg).toBe("ID not found");
+                });
         });
+    });     
 });
 
 
