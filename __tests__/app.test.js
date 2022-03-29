@@ -99,6 +99,15 @@ describe('# GET REQUESTS', () => {
                     expect(body.comments.length).toBe(11);
                 });
         });
+        test('200: Returns empty array when article_id has no associated comments', () => {
+            return request(app)
+                .get('/api/articles/2/comments')
+                .expect(200)
+                .then(({body}) => {
+                    expect(body.comments.length).toBe(0);
+                });
+        });
+        
     });
 
   
