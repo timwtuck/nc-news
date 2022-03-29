@@ -67,6 +67,12 @@ exports._selectByArticleId = async (id) => {
 
 exports._selectAllArticleIDs = async (sorted_by='created_at', asc=false) => {
 
+    const validItems = ['created_at', 'author', 'title', 'atricle_id',
+                        'topic', 'votes'];
+    
+    if (!validItems.includes(sorted_by))
+        return Promise.reject(errors.invalidQueryObj);
+
     const query = `SELECT article_id FROM articles
                     ORDER BY %I ${asc ? 'ASC' : 'DESC'};`;
     
