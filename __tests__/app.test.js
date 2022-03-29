@@ -45,7 +45,7 @@ describe('# GET REQUESTS', () => {
         });
     });
 
-    describe.only('GET /api/articles', () => {
+    describe('GET /api/articles', () => {
 
         test('200: returns all articles', () => {
             return request(app)
@@ -104,7 +104,7 @@ describe('# GET REQUESTS', () => {
         });
     });   
 
-    describe.only('GET /api/articles/:article_id/comments', () => {
+    describe('GET /api/articles/:article_id/comments', () => {
 
         test('200: Returns array of comments for given article_id', () => {
             return request(app)
@@ -233,7 +233,7 @@ describe('# PATCH REQUESTS', () => {
                 .send(patch)
                 .expect(400)
                 .then(res => {
-                    expect(res.body.msg).toBe("Invalid Object");
+                    expect(res.body.msg).toBe("Invalid Patch Object");
             });
         });
     });
