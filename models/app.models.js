@@ -22,7 +22,6 @@ exports.selectArticles = (id) => {
         });
 }
 
-
 exports.updateArticle = (id, adjustedVotes) => {
 
     let query = `SELECT votes FROM articles
@@ -31,7 +30,6 @@ exports.updateArticle = (id, adjustedVotes) => {
     return db.query(query, [id])
         .then(res => {
 
-            console.log('here');
             let newVotes = res.rows[0].votes += adjustedVotes;
             query = `UPDATE articles
                     SET votes = $1

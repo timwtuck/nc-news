@@ -6,7 +6,7 @@ const commentsModel = require('./comments.models.js');
  *              PUBLIC METHODS
  ********************************************************/
 
-exports.select = async (id) => {
+exports.selectArticle = async (id) => {
 
     promises = [];
     promises.push(this._selectByArticleId(id));
@@ -45,11 +45,10 @@ exports._selectByArticleId = async (id) => {
     const query =  `SELECT * FROM articles
                     WHERE article_id = $1;`;
 
-                    console.log('here')
     const res = await db.query(query, [id]);
 
     if (res.rows.length == 0)
         return Promise.reject({status: 404, msg: "ID not found"});
-        
+
     return res.rows[0];
 }

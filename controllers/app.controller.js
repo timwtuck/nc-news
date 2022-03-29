@@ -12,7 +12,7 @@ exports.getArticle = (req, res, next) => {
 
     const {article_id} = req.params;
 
-    articlesModel.select(article_id)
+    articlesModel.selectArticle(article_id)
         .then(article => {
             res.status(200).send({article});
         })
