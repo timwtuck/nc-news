@@ -32,6 +32,7 @@ exports.selectUsers = () => {
         });
 }
 
+
 exports.updateArticle = (id, adjustedVotes) => {
 
     let query = `SELECT votes FROM articles
