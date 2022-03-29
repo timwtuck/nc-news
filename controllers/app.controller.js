@@ -1,11 +1,16 @@
 const {topicsModel, articlesModel, commentsModel, usersModel} = require('../models/');
 
+/*************************************************
+ * GET REQUESTS
+ ************************************************/
+
 exports.getTopics = (req, res, next) => {
 
     topicsModel.selectTopics()
         .then(topics => {
             res.status(200).send({topics});
-        });
+        })
+        .catch(next);
 };
 
 exports.getArticle = (req, res, next) => {
@@ -18,6 +23,19 @@ exports.getArticle = (req, res, next) => {
         })
         .catch(next);
 }
+
+exports.getUsers = (req, res, next) => {
+
+    m.selectUsers()
+        .then(users => {
+            res.status(200).send({users});
+        })
+        .catch(next);
+}
+
+/*************************************************
+ * PATCH REQUESTS
+ ************************************************/
 
 exports.patchArticle = (req, res, next) => {
 

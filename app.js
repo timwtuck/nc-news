@@ -10,6 +10,8 @@ app.get('/api/topics', controller.getTopics);
 app.get('/api/articles/:article_id', controller.getArticle)
 app.patch('/api/articles/:article_id', controller.patchArticle)
 
+app.get('/api/users', c.getUsers);
+
 app.use(errors.pathNotFound);
 app.use(errors.psql_invalidType);
 app.use(errors.customError);

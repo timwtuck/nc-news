@@ -76,6 +76,23 @@ describe('# GET REQUESTS', () => {
                 });
         });
     });     
+  
+    describe.only('GET /api/users', () => {
+
+          test('200: returns an array of objects with property username', () => {
+              return request(app)
+                  .get('/api/users')
+                  .expect(200)
+                  .then(res => {
+                      const users = res.body.users;
+                      users.forEach(user => {
+                          expect(user).toMatchObject({
+                              username: expect.any(String)
+                          });
+                      });
+                  });
+          });
+      });
 });
 
 
@@ -105,8 +122,7 @@ describe('# PATCH REQUESTS', () => {
                     const article = res.body.article;
                     expect(article.article_id).toBe(1);
                     expect(article.votes).toBe(0);
-                });
-                    
+                });         
         });
     });
 });
