@@ -72,12 +72,12 @@ describe('# GET REQUESTS', () => {
                 .expect(404)
                 .then(res => {
                     console.log(res.body)
-                    expect(res.body.msg).toBe("ID not found");
+                    expect(res.body.msg).toBe("ID Not Found");
                 });
         });
     });     
   
-    describe.only('GET /api/users', () => {
+    describe('GET /api/users', () => {
 
           test('200: returns an array of objects with property username', () => {
               return request(app)
@@ -123,6 +123,16 @@ describe('# PATCH REQUESTS', () => {
                     expect(article.article_id).toBe(1);
                     expect(article.votes).toBe(0);
                 });         
+        });
+        test('404: ID not found for valid non-existent id', () => {
+            const patch = {inc_votes: 1};
+            return request(app)
+                .patch('/api/articles/99999')
+                .send(patch)
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found")
+                });
         });
     });
 });

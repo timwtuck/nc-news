@@ -1,6 +1,7 @@
 const db = require('../db/connection.js');
 const format = require('pg-format');
 const commentsModel = require('./comments.models.js');
+const errors = require('../errors.js');
 
 /********************************************************
  *              PUBLIC METHODS
@@ -20,19 +21,17 @@ exports.selectArticle = async (id) => {
 
 exports.updateArticle = async (id, adjustedVotes) => {
 
-    let query = `SELECT votes FROM articles
-                    WHERE article_id = $1;`;
-                    
-    const res = await db.query(query, [id]);
-
-    let newVotes = res.rows[0].votes += adjustedVotes;
     query = `UPDATE articles
-            SET votes = $1
+            SET votes = votes + $1
             WHERE article_id = $2
             RETURNING *;`;
 
-    const res_1 = await db.query(query, [newVotes, id]);
-    return res_1.rows[0];
+    const res = await db.query(query, [adjustedVotes, id]);
+
+    if (res.rows.length == 0)
+        return Promise.reject(errors.idNotFoundObj);
+        
+    return res.rows[0];
 }
 
 
@@ -48,7 +47,7 @@ exports._selectByArticleId = async (id) => {
     const res = await db.query(query, [id]);
 
     if (res.rows.length == 0)
-        return Promise.reject({status: 404, msg: "ID not found"});
+        return Promise.reject(errors.idNotFoundObj);
 
     return res.rows[0];
 }
