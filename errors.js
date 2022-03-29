@@ -22,3 +22,11 @@ exports.psql_invalidType = (err, req, res, next) => {
         next(err);
     }
 }
+
+exports.customError = (err, req, res, next) => {
+    if (err.status && err.msg){
+        res.status(err.status).send({msg: err.msg});
+    }else{
+        next(err);
+    }
+}
