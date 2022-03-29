@@ -1,2 +1,4 @@
 node_modules
 .env.*
+psql_play.sql
+sql_tables.txt
