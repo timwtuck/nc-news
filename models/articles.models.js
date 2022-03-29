@@ -20,15 +20,13 @@ exports.selectArticle = async (id) => {
 
 exports.selectAllArticles = async () => {
     
-    const ids = await this._selectAllArticleIDs();
-    const promises = [];
+    const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
+                    INNER JOIN comments ON comments.article_id = articles.article_id
+                    GROUP BY articles.article_id
+                    ORDER BY created_at DESC`;
 
-    ids.forEach(id => 
-        promises.push(this.selectArticle(id.article_id)));
-
-    const articles = await Promise.all(promises);
-
-    return articles;
+    const articles = await db.query(query);
+    return articles.rows;
 }
 
 
@@ -63,21 +61,4 @@ exports._selectByArticleId = async (id) => {
         return Promise.reject(errors.idNotFoundObj);
 
     return res.rows[0];
-}
-
-exports._selectAllArticleIDs = async (sorted_by='created_at', asc=false) => {
-
-    const validItems = ['created_at', 'author', 'title', 'atricle_id',
-                        'topic', 'votes'];
-    
-    if (!validItems.includes(sorted_by))
-        return Promise.reject(errors.invalidQueryObj);
-
-    const query = `SELECT article_id FROM articles
-                    ORDER BY %I ${asc ? 'ASC' : 'DESC'};`;
-    
-    const sql = format(query, sorted_by);
-
-    const results = await db.query(sql);
-    return results.rows;
 }
