@@ -1,4 +1,15 @@
 
+/*******************************************************
+ * Error Objects
+ ********************************************************/
+exports.idNotFoundObj = {status: 404, msg: "ID Not Found"};
+exports.invalidQueryObj = {status:400, msg: "Invalid Query Item"};
+
+
+
+/*******************************************************
+ * Error Handlers
+ ********************************************************/
 exports.pathNotFound = (req, res, next) => {
 
     res.status(404).send({msg: 'Path Not Found'});

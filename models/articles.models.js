@@ -1,6 +1,7 @@
 const db = require('../db/connection.js');
 const format = require('pg-format');
 const commentsModel = require('./comments.models.js');
+const errors = require('../errors.js');
 
 /********************************************************
  *              PUBLIC METHODS
@@ -8,7 +9,7 @@ const commentsModel = require('./comments.models.js');
 
 exports.selectArticle = async (id) => {
 
-    promises = [];
+    const promises = [];
     promises.push(this._selectByArticleId(id));
     promises.push(commentsModel.selectByArticleId(id));
 
@@ -17,22 +18,31 @@ exports.selectArticle = async (id) => {
     return article;
 }
 
+exports.selectAllArticles = async () => {
+    
+    const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
+                    INNER JOIN comments ON comments.article_id = articles.article_id
+                    GROUP BY articles.article_id
+                    ORDER BY created_at DESC`;
+
+    const articles = await db.query(query);
+    return articles.rows;
+}
+
 
 exports.updateArticle = async (id, adjustedVotes) => {
 
-    let query = `SELECT votes FROM articles
-                    WHERE article_id = $1;`;
-                    
-    const res = await db.query(query, [id]);
-
-    let newVotes = res.rows[0].votes += adjustedVotes;
     query = `UPDATE articles
-            SET votes = $1
+            SET votes = votes + $1
             WHERE article_id = $2
-            RETURNING *;`;
+            RETURNING *;`
 
-    const res_1 = await db.query(query, [newVotes, id]);
-    return res_1.rows[0];
+    const res = await db.query(query, [adjustedVotes, id]);
+
+    if (res.rows.length == 0)
+        return Promise.reject(errors.idNotFoundObj);
+
+    return res.rows[0];
 }
 
 
@@ -48,7 +58,7 @@ exports._selectByArticleId = async (id) => {
     const res = await db.query(query, [id]);
 
     if (res.rows.length == 0)
-        return Promise.reject({status: 404, msg: "ID not found"});
+        return Promise.reject(errors.idNotFoundObj);
 
     return res.rows[0];
 }

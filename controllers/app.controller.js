@@ -24,9 +24,18 @@ exports.getArticle = (req, res, next) => {
         .catch(next);
 }
 
+exports.getAllArticles = (req, res, next) => {
+
+    articlesModel.selectAllArticles()
+        .then(articles => {
+            res.status(200).send({articles});
+        })
+        .catch(next);
+}
+
 exports.getUsers = (req, res, next) => {
 
-    m.selectUsers()
+    usersModel.selectUsers()
         .then(users => {
             res.status(200).send({users});
         })

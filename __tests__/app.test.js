@@ -44,8 +44,36 @@ describe('# GET REQUESTS', () => {
                 });
         });
     });
+
+    describe.only('GET /api/articles', () => {
+
+        test('200: returns all articles', () => {
+            return request(app)
+                .get('/api/articles')
+                .expect(200)
+                .then(({body}) => {
+
+                    // check each object has correct properties
+                    body.articles.forEach(article => {
+                        expect(article).toMatchObject({
+                            author: expect.any(String),
+                            title: expect.any(String),
+                            article_id: expect.any(Number),
+                            topic: expect.any(String),
+                            created_at: expect.any(String),
+                            votes: expect.any(Number),
+                            comment_count: expect.any(Number)
+                        });
+                    });
+
+                    // check in ascending order
+                    expect(body.articles).toBeSortedBy('created_at', {descending: true});
+                });
+        });
+    });
   
-  describe('GET /api/articles/:article_id', () => {
+
+    describe('GET /api/articles/:article_id', () => {
 
         test('200: returns article at article_id', () => {
             return request(app)
@@ -71,13 +99,12 @@ describe('# GET REQUESTS', () => {
                 .get('/api/articles/100000')
                 .expect(404)
                 .then(res => {
-                    console.log(res.body)
-                    expect(res.body.msg).toBe("ID not found");
+                    expect(res.body.msg).toBe("ID Not Found");
                 });
         });
     });     
   
-    describe.only('GET /api/users', () => {
+    describe('GET /api/users', () => {
 
           test('200: returns an array of objects with property username', () => {
               return request(app)
@@ -124,11 +151,21 @@ describe('# PATCH REQUESTS', () => {
                     expect(article.votes).toBe(0);
                 });         
         });
+        test('404: ID not found for valid non-existent id', () => {
+            const patch = {inc_votes: 1};
+            return request(app)
+                .patch('/api/articles/99999')
+                .send(patch)
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found")
+                });
+        });
     });
 });
 
 
-describe.only('# PATCH REQUESTS', () => {
+describe('# PATCH REQUESTS', () => {
 
     describe('PATCH /api/articles/:article_id', () => {
         test('200: Returns patched article when increasing votes', () => { 
