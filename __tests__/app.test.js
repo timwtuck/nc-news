@@ -98,7 +98,6 @@ describe('# GET REQUESTS', () => {
                 .get('/api/articles/100000')
                 .expect(404)
                 .then(res => {
-                    console.log(res.body)
                     expect(res.body.msg).toBe("ID Not Found");
                 });
         });
