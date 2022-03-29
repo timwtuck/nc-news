@@ -95,6 +95,8 @@ describe('# GET REQUESTS', () => {
                             }
                         );
                     });
+
+                    expect(body.comments.length).toBe(11);
                 });
         });
     });
