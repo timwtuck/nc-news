@@ -1,4 +1,4 @@
-const m = require('../models/app.models.js');
+const {topicsModel, articlesModel, commentsModel, usersModel} = require('../models/');
 
 /*************************************************
  * GET REQUESTS
@@ -6,21 +6,20 @@ const m = require('../models/app.models.js');
 
 exports.getTopics = (req, res, next) => {
 
-    m.selectTopics()
+    topicsModel.selectTopics()
         .then(topics => {
             res.status(200).send({topics});
         })
         .catch(next);
 };
 
-exports.getArticles = (req, res, next) => {
+exports.getArticle = (req, res, next) => {
 
     const {article_id} = req.params;
 
-    m.selectArticles(article_id)
-        .then(articles => {
-            console.log(articles);
-            res.status(200).send({articles});
+    articlesModel.selectArticle(article_id)
+        .then(article => {
+            res.status(200).send({article});
         })
         .catch(next);
 }
@@ -43,7 +42,7 @@ exports.patchArticle = (req, res, next) => {
     const {article_id} = req.params;
     const updateObj = req.body;
 
-    m.updateArticle(article_id, updateObj.inc_votes)
+    articlesModel.updateArticle(article_id, updateObj.inc_votes)
         .then(article => {
             res.status(200).send({article});
             })
