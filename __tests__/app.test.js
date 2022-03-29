@@ -75,9 +75,43 @@ describe('# GET REQUESTS', () => {
                     expect(res.body.msg).toBe("ID not found");
                 });
         });
-    });     
+    });   
+
+    describe.only('GET /api/articles/:article_id/comments', () => {
+
+        test('200: Returns array of comments for given article_id', () => {
+            return request(app)
+                .get('/api/articles/1/comments')
+                .expect(200)
+                .then(({body}) => {
+                    body.comments.forEach(comment => {
+                        expect(comment).toMatchObject(
+                            {
+                                comment_id: expect.any(Number),
+                                votes: expect.any(Number),
+                                created_at: expect.any(String),
+                                author: expect.any(String),
+                                body: expect.any(String)
+                            }
+                        );
+                    });
+
+                    expect(body.comments.length).toBe(11);
+                });
+        });
+        test('200: Returns empty array when article_id has no associated comments', () => {
+            return request(app)
+                .get('/api/articles/2/comments')
+                .expect(200)
+                .then(({body}) => {
+                    expect(body.comments.length).toBe(0);
+                });
+        });
+        
+    });
+
   
-    describe.only('GET /api/users', () => {
+    describe('GET /api/users', () => {
 
           test('200: returns an array of objects with property username', () => {
               return request(app)
@@ -128,7 +162,7 @@ describe('# PATCH REQUESTS', () => {
 });
 
 
-describe.only('# PATCH REQUESTS', () => {
+describe('# PATCH REQUESTS', () => {
 
     describe('PATCH /api/articles/:article_id', () => {
         test('200: Returns patched article when increasing votes', () => { 
@@ -163,7 +197,7 @@ describe.only('# PATCH REQUESTS', () => {
                 .expect(400)
                 .then(res => {
                     expect(res.body.msg).toBe("Invalid Object");
-                });
-        })
+            });
+        });
     });
 });
