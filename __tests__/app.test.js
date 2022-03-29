@@ -47,24 +47,22 @@ describe('# GET REQUESTS', () => {
 
     describe('GET /api/articles/:article_id', () => {
 
-        test('200: returns article at article_id', () => {
+        test.only('200: returns article at article_id', () => {
             return request(app)
                 .get('/api/articles/1')
                 .expect(200)
                 .then(res => {
-                    const articles = res.body.articles;
-                    articles.forEach(article => {
-                        
-                        // check object properties
-                        expect(article).toMatchObject({
+                    const article = res.body.article;
+
+                    expect(article).toMatchObject({
                         author: expect.any(String),
                         title: expect.any(String),
                         article_id: 1,
                         body: expect.any(String),
                         topic: expect.any(String),
                         created_at: expect.any(String),
-                        votes: expect.any(Number)});
-                    });
+                        votes: expect.any(Number),
+                        comment_count: 11});
                 });
             });
         });
@@ -72,7 +70,7 @@ describe('# GET REQUESTS', () => {
 
 
 
-describe.only('# PATCH REQUESTS', () => {
+describe('# PATCH REQUESTS', () => {
 
     describe('PATCH /api/articles/:article_id', () => {
         test('200: Returns patched article when increasing votes', () => { 
