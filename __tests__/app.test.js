@@ -238,3 +238,30 @@ describe('# PATCH REQUESTS', () => {
         });
     });
 });
+
+describe.only('# POST REQUESTS', () => {
+
+    describe('POST /api/articles/:article_id/comments', () => {
+        test('201: Posts new comment to article_id', () => {
+            const post = {username:'rogersop', body:"This is a comment"};
+            return request(app)
+                .post('/api/articles/2/comments')
+                .send(post)
+                .expect(201)
+                .then(({body}) => {
+                    expect(body.comment).toMatchObject(
+                        {
+                            comment_id: 19, 
+                            author: 'rogersop',
+                            body: "This is a comment",
+                            article_id: 2,
+                            votes: 0,
+                            created_at: expect.any(String)
+                        }
+                    )
+                });
+        });
+
+
+    });
+});

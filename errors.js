@@ -4,7 +4,9 @@
  ********************************************************/
 exports.idNotFoundObj = {status: 404, msg: "ID Not Found"};
 exports.invalidQueryObj = {status:400, msg: "Invalid Query Item"};
-exports.invalidPatchObj = {status: 400, msg: "Invalid Patch Object"}
+exports.invalidPatchObj = {status: 400, msg: "Invalid Patch Object"};
+exports.invalidPostObj = {status:400, msg: "Invalid Post Object"};
+exports.invalidDatabaseColummObj = {status: 400, msg: "Invalid Database Column"};
 
 
 
@@ -26,7 +28,7 @@ exports.customError = (err, req, res, next) => {
 }
 
 exports.psql_invalidType = (err, req, res, next) => {
-
+console.log(err)
     if (err.code === "22P02"){
         res.status(400).send({msg: "Invalid Data Type"});
     }
