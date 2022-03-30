@@ -27,14 +27,22 @@ exports.customError = (err, req, res, next) => {
     }
 }
 
-exports.psql_invalidType = (err, req, res, next) => {
+exports.psql_errors = (err, req, res, next) => {
 console.log(err)
     if (err.code === "22P02"){
         res.status(400).send({msg: "Invalid Data Type"});
     }
+    else if (err.code === "23503") {
+        res.status(this.idNotFoundObj.status)
+            .send({msg:this.idNotFoundObj.msg});
+    }
     else {
         next(err);
     }
+}
+
+exports.psql_invalidReference = (err, req, res, next) => {
+    
 }
 
 exports.customError = (err, req, res, next) => {

@@ -8,7 +8,7 @@ exports.selectUsers = () => {
 
     return db.query(query)
         .then(res => {
-            return res.rows;
+            return res.rows; 
         });
 }
 

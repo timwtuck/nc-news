@@ -21,6 +21,6 @@ app.get('/api/users', controller.getUsers);
 // errors
 app.use(errors.pathNotFound);
 app.use(errors.customError);
-app.use(errors.psql_invalidType);
+app.use(errors.psql_errors);
 
 module.exports = app;

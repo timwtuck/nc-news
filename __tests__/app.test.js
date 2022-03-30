@@ -261,7 +261,24 @@ describe.only('# POST REQUESTS', () => {
                     )
                 });
         });
-
-
+        test('400: Invalid Post Object', () => {
+            const post = {};
+            return request(app)
+                .post('/api/articles/2/comments')
+                .send(post)
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Post Object");
+                });
+        });
+        test('400: ID doesn\'t exist', () => {
+            return request(app)
+                .post('/api/articles/100000/comments')
+                .send({username:'rogersop', body:"This is a comment"})
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found");
+                });
+        })
     });
 });
