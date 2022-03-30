@@ -21,7 +21,7 @@ exports.selectArticle = async (id) => {
 exports.selectAllArticles = async () => {
     
     const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
-                    INNER JOIN comments ON comments.article_id = articles.article_id
+                    LEFT JOIN comments ON comments.article_id = articles.article_id
                     GROUP BY articles.article_id
                     ORDER BY created_at DESC`;
 

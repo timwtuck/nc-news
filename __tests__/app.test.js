@@ -53,6 +53,8 @@ describe('# GET REQUESTS', () => {
                 .expect(200)
                 .then(({body}) => {
 
+                    expect(body.articles.length).toBe(12);
+
                     // check each object has correct properties
                     body.articles.forEach(article => {
                         expect(article).toMatchObject({
