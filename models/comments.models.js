@@ -18,7 +18,13 @@ exports.insertCommentById = async (id, username, body) => {
     if(!username || !body)
         return Promise.reject(errors.invalidPostObj);
 
-  /*  const query = `INSERT INTO comments
+  /*  
+  HELLO NORTHCODERS TEAM--> I would love to know why this doesn't work?! I kept getting Syntax Error
+  which seems to be due to the Date object. Yet in the utils.js the date converter returns
+  a date object, and also this returns synatx error and not type error so not entirely sure why. 
+  I know I don't need this to complete the ticket, but would still love to know why! Thanks <3
+
+  const query = `INSERT INTO comments
                     (article_id, author, body, created_at, votes)
                     VALUES
                     (1, 'butter_bridge', 'hello', ${new Date()}, 0);`;
