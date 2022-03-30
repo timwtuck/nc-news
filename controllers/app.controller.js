@@ -69,3 +69,21 @@ exports.patchArticle = (req, res, next) => {
             })
         .catch(next);
 }
+
+
+/*************************************************
+ * POST REQUESTS
+ ************************************************/
+
+exports.postCommentByArticleId = (req, res, next) => {
+
+    const {article_id} = req.params;
+    const newComment = req.body;
+
+    commentsModel.insertCommentById(article_id, 
+        newComment.username, newComment.body)
+        .then(comment => {
+            res.status(201).send({comment});
+        })
+        .catch(next);
+}

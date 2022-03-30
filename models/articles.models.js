@@ -32,6 +32,9 @@ exports.selectAllArticles = async () => {
 
 exports.updateArticle = async (id, adjustedVotes) => {
 
+    if(!adjustedVotes)
+        return Promise.reject(errors.invalidPatchObj);
+
     query = `UPDATE articles
             SET votes = votes + $1
             WHERE article_id = $2

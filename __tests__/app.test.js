@@ -45,7 +45,7 @@ describe('# GET REQUESTS', () => {
         });
     });
 
-    describe.only('GET /api/articles', () => {
+    describe('GET /api/articles', () => {
 
         test('200: returns all articles', () => {
             return request(app)
@@ -104,7 +104,7 @@ describe('# GET REQUESTS', () => {
         });
     });   
 
-    describe.only('GET /api/articles/:article_id/comments', () => {
+    describe('GET /api/articles/:article_id/comments', () => {
 
         test('200: Returns array of comments for given article_id', () => {
             return request(app)
@@ -233,8 +233,52 @@ describe('# PATCH REQUESTS', () => {
                 .send(patch)
                 .expect(400)
                 .then(res => {
-                    expect(res.body.msg).toBe("Invalid Object");
+                    expect(res.body.msg).toBe("Invalid Patch Object");
             });
         });
+    });
+});
+
+describe.only('# POST REQUESTS', () => {
+
+    describe('POST /api/articles/:article_id/comments', () => {
+        test('201: Posts new comment to article_id', () => {
+            const post = {username:'rogersop', body:"This is a comment"};
+            return request(app)
+                .post('/api/articles/2/comments')
+                .send(post)
+                .expect(201)
+                .then(({body}) => {
+                    expect(body.comment).toMatchObject(
+                        {
+                            comment_id: 19, 
+                            author: 'rogersop',
+                            body: "This is a comment",
+                            article_id: 2,
+                            votes: 0,
+                            created_at: expect.any(String)
+                        }
+                    )
+                });
+        });
+        test('400: Invalid Post Object', () => {
+            const post = {};
+            return request(app)
+                .post('/api/articles/2/comments')
+                .send(post)
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Post Object");
+                });
+        });
+        test('400: ID doesn\'t exist', () => {
+            return request(app)
+                .post('/api/articles/100000/comments')
+                .send({username:'rogersop', body:"This is a comment"})
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found");
+                });
+        })
     });
 });
