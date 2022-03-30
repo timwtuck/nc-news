@@ -41,10 +41,6 @@ exports.psql_errors = (err, req, res, next) => {
     }
 }
 
-exports.psql_invalidReference = (err, req, res, next) => {
-    
-}
-
 exports.customError = (err, req, res, next) => {
     if (err.status && err.msg){
         res.status(err.status).send({msg: err.msg});

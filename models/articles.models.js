@@ -18,14 +18,17 @@ exports.selectArticle = async (id) => {
     return article;
 }
 
-exports.selectAllArticles = async () => {
+exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%') => {
+
+    this._validateInput({sortBy, order});
     
     const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
                     LEFT JOIN comments ON comments.article_id = articles.article_id
+                    WHERE topic ILIKE $1
                     GROUP BY articles.article_id
-                    ORDER BY created_at DESC`;
-
-    const articles = await db.query(query);
+                    ORDER BY ${sortBy} ${order};`;
+              
+    const articles = await db.query(query, [topic]);
     return articles.rows;
 }
 
@@ -64,4 +67,18 @@ exports._selectByArticleId = async (id) => {
         return Promise.reject(errors.idNotFoundObj);
 
     return res.rows[0];
+}
+
+exports._validateInput = (input) => {
+
+    const validSort = ['title', 'article_id', 'topic', 
+                        'created_at', 'votes', 'comment_count'];
+
+    const validOrder = ['asc', 'desc'];
+
+    if ((input.sortBy && !validSort.includes(input.sortBy)) ||
+        (input.order && !validOrder.includes(input.order))){
+
+        return Promise.reject(errors.invalidQueryObj);
+    }
 }
