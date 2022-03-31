@@ -1,9 +1,15 @@
 const {topicsModel, articlesModel, commentsModel, usersModel} = require('../models/');
+const endPoints = require('../endpoints.json');
 const errors = require('../errors.js');
 
 /*************************************************
  * GET REQUESTS
  ************************************************/
+
+exports.getApi = (req, res, next) => {
+
+    res.status(200).send({endPoints});
+}
 
 exports.getTopics = (req, res, next) => {
 
