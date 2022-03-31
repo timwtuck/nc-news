@@ -87,3 +87,19 @@ exports.postCommentByArticleId = (req, res, next) => {
         })
         .catch(next);
 }
+
+
+/*************************************************
+ * DELETE REQUESTS
+ ************************************************/
+
+exports.deleteCommentById = (req, res, next) => {
+
+    const {comment_id} = req.params;
+
+    commentsModel.deleteCommentById(comment_id)
+        .then(() => {
+            res.status(204).send();
+        })
+        .catch(next);
+}

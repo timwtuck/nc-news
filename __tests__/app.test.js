@@ -241,7 +241,7 @@ describe('# PATCH REQUESTS', () => {
     });
 });
 
-describe.only('# POST REQUESTS', () => {
+describe('# POST REQUESTS', () => {
 
     describe('POST /api/articles/:article_id/comments', () => {
         test('201: Posts new comment to article_id', () => {
@@ -283,4 +283,26 @@ describe.only('# POST REQUESTS', () => {
                 });
         })
     });
+});
+
+describe.only('# DELETE REQUESTS', () => {
+
+    describe('DELETE /api/comments/:comment_id', () => {
+        test('204: No content returned on successful deletion', () => {
+            return request(app)
+                .delete('/api/comments/16')
+                .expect(204)
+                .then(() => {
+                    return request(app)
+                        .get('/api/articles/6/comments')
+                        .expect(200);
+                })
+                .then(({body}) => {
+                    // comment_id = 16 was the only comment for article 6,
+                    // check has been deleted
+                    expect(body.comments.length).toBe(0);
+                });
+        });
+    });
+
 });
