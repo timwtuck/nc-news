@@ -1,25 +1,13 @@
 const express = require('express');
 const controller = require('./controllers/app.controller.js');
 const errors = require('./errors.js');
+const apiRouter = require('./routers/api-router.js');
 
 const app = express();
 app.use(express.json());
 
-app.get('/api', controller.getApi);
-
-app.get('/api/topics', controller.getTopics);
-
-app.get('/api/articles', controller.getAllArticles);
-
-app.get('/api/articles/:article_id', controller.getArticle);
-app.patch('/api/articles/:article_id', controller.patchArticle);
-
-app.get('/api/articles/:article_id/comments', controller.getCommentsByArticleId);
-app.post('/api/articles/:article_id/comments', controller.postCommentByArticleId);
-
-app.delete('/api/comments/:comment_id', controller.deleteCommentById);
-
-app.get('/api/users', controller.getUsers);
+// route paths
+app.use('/api', apiRouter);
 
 // errors
 app.use(errors.pathNotFound);
