@@ -1,5 +1,5 @@
 const db = require('../db/connection.js');
-const format = require('pg-format');
+//const format = require('pg-format');
 const errors = require('../errors.js');
 
 exports.selectUsers = () => {
@@ -24,7 +24,7 @@ exports.selectUserByUsername = async (username) => {
  * PRIVATE METHODS
  *******************************************************/
 
-exports._selectByProperty = async (property, value) => {
+/*exports._selectByProperty = async (property, value) => {
 
     const validProperties = ['username', 'name', 'avatar_url'];
     if(!validProperties.includes(property))
@@ -41,5 +41,5 @@ exports._selectByProperty = async (property, value) => {
     
     return results.rows[0];
 }
-
+*/
 

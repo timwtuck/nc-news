@@ -1,5 +1,5 @@
 const db = require('../db/connection.js');
-const format = require('pg-format');
+//const format = require('pg-format');
 const commentsModel = require('./comments.models.js');
 const topicsModel = require('./topics.models.js');
 const errors = require('../errors.js');
