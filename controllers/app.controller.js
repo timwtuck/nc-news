@@ -1,5 +1,6 @@
 const {topicsModel, articlesModel, commentsModel, usersModel} = require('../models/');
 const endPoints = require('../endpoints.json');
+const errors = require('../errors.js');
 
 /*************************************************
  * GET REQUESTS
@@ -32,7 +33,9 @@ exports.getArticle = (req, res, next) => {
 
 exports.getAllArticles = (req, res, next) => {
 
-    articlesModel.selectAllArticles()
+    const {sort_by, order, topic} = req.query;
+
+    articlesModel.selectAllArticles(sort_by, order, topic)
         .then(articles => {
             res.status(200).send({articles});
         })
