@@ -3,6 +3,7 @@
  * Error Objects
  ********************************************************/
 exports.idNotFoundObj = {status: 404, msg: "ID Not Found"};
+exports.queryNotFoundObj = {status:404, msg: "Query Item Not Found"};
 exports.invalidQueryObj = {status:400, msg: "Invalid Query Item"};
 exports.invalidPatchObj = {status: 400, msg: "Invalid Patch Object"};
 exports.invalidPostObj = {status:400, msg: "Invalid Post Object"};

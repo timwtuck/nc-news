@@ -99,12 +99,28 @@ describe('# GET REQUESTS', () => {
                     expect(body.articles[0].topic).toBe('cats');
                 });
         });
-        test('400: invalid query', () => {
+        test('400: invalid sort_by query', () => {
             return request(app)
                 .get('/api/articles?sort_by=not_valid_column')
                 .expect(400)
                 .then(({body}) => {
                     expect(body.msg).toBe("Invalid Query Item");
+                });
+        });
+        test('400: invalid order query', () => {
+            return request(app)
+                .get('/api/articles?order=not_valid_value')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Query Item");
+                });
+        });
+        test('404: non-existent topic query', () => {
+            return request(app)
+                .get('/api/articles?topic=not_a_topic')
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Query Item Not Found");
                 });
         });
     });

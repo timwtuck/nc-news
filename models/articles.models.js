@@ -1,6 +1,7 @@
 const db = require('../db/connection.js');
 const format = require('pg-format');
 const commentsModel = require('./comments.models.js');
+const topicsModel = require('./topics.models.js');
 const errors = require('../errors.js');
 
 /********************************************************
@@ -20,7 +21,7 @@ exports.selectArticle = async (id) => {
 
 exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%') => {
 
-    await this._validateInput({sortBy, order});
+    await this._validateInput({sortBy, order, topic});
     
     const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
                     LEFT JOIN comments ON comments.article_id = articles.article_id
@@ -29,6 +30,7 @@ exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic 
                     ORDER BY ${sortBy} ${order};`;
               
     const articles = await db.query(query, [topic]);
+
     return articles.rows;
 }
 
@@ -81,4 +83,18 @@ exports._validateInput = async (input) => {
 
         return Promise.reject(errors.invalidQueryObj);
     }
+
+    return this._validateTopic(input.topic);
+}
+
+exports._validateTopic = async (topic) => {
+
+    if (!topic || topic === '%%')
+        return;
+
+    const results = await topicsModel.selectTopics();
+    const topics = results.map(topic => topic.slug);
+    
+    if(!topics.includes(topic))
+        return Promise.reject(errors.queryNotFoundObj);
 }
