@@ -218,6 +218,30 @@ describe('# GET REQUESTS', () => {
                   });
           });
       });
+
+      describe.only('GET /api/users/:username', () => {
+
+        test('200: returns username object', () => {
+            return request(app)
+                .get('/api/users/rogersop')
+                .expect(200)
+                .then(({body}) => {
+                    expect(body.user).toMatchObject({
+                            username: 'rogersop',
+                            name: 'paul',
+                            avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+                    });
+                });
+        });
+        test('404: upon non-existant id', () => {
+            return request(app)
+                .get('/api/users/not_an_id')
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe('ID Not Found');
+                });
+        });
+      });
 });
 
 
