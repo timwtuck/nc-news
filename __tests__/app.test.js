@@ -347,3 +347,41 @@ describe('# POST REQUESTS', () => {
         })
     });
 });
+
+describe.only('# DELETE REQUESTS', () => {
+
+    describe('DELETE /api/comments/:comment_id', () => {
+        test('204: No content returned on successful deletion', () => {
+            return request(app)
+                .delete('/api/comments/16')
+                .expect(204)
+                .then(() => {
+                    return request(app)
+                        .get('/api/articles/6/comments')
+                        .expect(200);
+                })
+                .then(({body}) => {
+                    // comment_id = 16 was the only comment for article 6,
+                    // check has been deleted
+                    expect(body.comments.length).toBe(0);
+                });
+        });
+        test('404: Valid non-existent id', () => {
+            return request(app)
+                .delete('/api/comments/10000')
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found");
+                });
+        });
+        test('400: Invalid Comment Id', () => {
+            return request(app)
+                .delete('/api/comments/invalid_id')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Data Type");
+                });
+        });
+    });
+
+});

@@ -17,6 +17,8 @@ app.patch('/api/articles/:article_id', controller.patchArticle);
 app.get('/api/articles/:article_id/comments', controller.getCommentsByArticleId);
 app.post('/api/articles/:article_id/comments', controller.postCommentByArticleId);
 
+app.delete('/api/comments/:comment_id', controller.deleteCommentById);
+
 app.get('/api/users', controller.getUsers);
 
 // errors
