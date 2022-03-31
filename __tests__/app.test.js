@@ -3,7 +3,7 @@ const request = require('supertest');
 const db = require('../db/connection.js');
 const testData = require('../db/data/test-data');
 const seed = require('../db/seeds/seed.js');
-
+const endPoints = require('../endpoints.json');
 
 afterAll(() => db.end());
 beforeEach(() => seed(testData));
@@ -29,6 +29,18 @@ describe('# COMMON ERRORS', () => {
 });
 
 describe('# GET REQUESTS', () => {
+
+    describe('GET /api', () => {
+        test('200: Returns all end points', () => {
+            return request(app)
+                .get('/api')
+                .expect(200)
+                .then(({body}) => {
+                    console.log(body)
+                    expect(body.endPoints).toEqual(endPoints);
+                });
+        });
+    })
 
     describe('GET /api/topics', () => {
         test('200: Returns list of topics', () => {
@@ -241,7 +253,7 @@ describe('# PATCH REQUESTS', () => {
     });
 });
 
-describe.only('# POST REQUESTS', () => {
+describe('# POST REQUESTS', () => {
 
     describe('POST /api/articles/:article_id/comments', () => {
         test('201: Posts new comment to article_id', () => {

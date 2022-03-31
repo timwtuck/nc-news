@@ -5,6 +5,7 @@ const errors = require('./errors.js');
 const app = express();
 app.use(express.json());
 
+app.get('/api', controller.getApi);
 
 app.get('/api/topics', controller.getTopics);
 
