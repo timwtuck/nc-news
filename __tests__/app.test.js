@@ -311,6 +311,14 @@ describe.only('# DELETE REQUESTS', () => {
                     expect(body.msg).toBe("ID Not Found");
                 });
         });
+        test('400: Invalid Comment Id', () => {
+            return request(app)
+                .delete('/api/comments/invalid_id')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Data Type");
+                });
+        });
     });
 
 });
