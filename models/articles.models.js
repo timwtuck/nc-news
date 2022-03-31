@@ -20,7 +20,7 @@ exports.selectArticle = async (id) => {
 
 exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%') => {
 
-    this._validateInput({sortBy, order});
+    await this._validateInput({sortBy, order});
     
     const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
                     LEFT JOIN comments ON comments.article_id = articles.article_id
@@ -69,7 +69,7 @@ exports._selectByArticleId = async (id) => {
     return res.rows[0];
 }
 
-exports._validateInput = (input) => {
+exports._validateInput = async (input) => {
 
     const validSort = ['title', 'article_id', 'topic', 
                         'created_at', 'votes', 'comment_count'];

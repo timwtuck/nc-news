@@ -45,7 +45,7 @@ describe('# GET REQUESTS', () => {
         });
     });
 
-    describe.only('GET /api/articles', () => {
+    describe('GET /api/articles', () => {
 
         test('200: returns all articles', () => {
             return request(app)
@@ -99,7 +99,14 @@ describe('# GET REQUESTS', () => {
                     expect(body.articles[0].topic).toBe('cats');
                 });
         });
-        test.todo('400: invalid query');
+        test('400: invalid query', () => {
+            return request(app)
+                .get('/api/articles?sort_by=not_valid_column')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Query Item");
+                });
+        });
     });
   
 
