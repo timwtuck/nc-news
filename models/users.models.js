@@ -34,9 +34,6 @@ exports._selectByProperty = async (property, value) => {
     const sql = format(query, property);
     const results = await db.query(sql, [value]);
 
-    console.log(sql, value)
-    console.log(results);
-
     if(results.rows.length === 0)
         return Promise.reject(errors.idNotFoundObj);
     

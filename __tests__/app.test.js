@@ -219,7 +219,7 @@ describe('# GET REQUESTS', () => {
           });
       });
 
-      describe.only('GET /api/users/:username', () => {
+      describe('GET /api/users/:username', () => {
 
         test('200: returns username object', () => {
             return request(app)
