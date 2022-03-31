@@ -51,6 +51,17 @@ exports.getUsers = (req, res, next) => {
         .catch(next);
 }
 
+exports.getUserByUsername = (req, res, next) => {
+
+    const {username} = req.params;
+
+    usersModel.selectUserByUsername(username)
+        .then(user => {
+            res.status(200).send({user});
+        })
+        .catch(next);
+}
+
 exports.getCommentsByArticleId = (req, res, next) => {
 
     const {article_id} = req.params;
