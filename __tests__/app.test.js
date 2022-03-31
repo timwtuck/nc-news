@@ -36,7 +36,6 @@ describe('# GET REQUESTS', () => {
                 .get('/api')
                 .expect(200)
                 .then(({body}) => {
-                    console.log(body)
                     expect(body.endPoints).toEqual(endPoints);
                 });
         });
@@ -348,7 +347,7 @@ describe('# POST REQUESTS', () => {
     });
 });
 
-describe.only('# DELETE REQUESTS', () => {
+describe('# DELETE REQUESTS', () => {
 
     describe('DELETE /api/comments/:comment_id', () => {
         test('204: No content returned on successful deletion', () => {
