@@ -31,7 +31,11 @@ exports.insertCommentById = async (id, username, body) => {
 exports.deleteCommentById = async (id) => {
 
     const query = `DELETE FROM comments
-                    WHERE comment_id = $1;`;
+                    WHERE comment_id = $1
+                    RETURNING *;`;
     
-    await db.query(query, [id]);
+    const result = await db.query(query, [id]);
+
+    if(result.rows.length === 0)
+        return Promise.reject(errors.idNotFoundObj);
 }

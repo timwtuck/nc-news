@@ -303,6 +303,14 @@ describe.only('# DELETE REQUESTS', () => {
                     expect(body.comments.length).toBe(0);
                 });
         });
+        test('404: Valid non-existent id', () => {
+            return request(app)
+                .delete('/api/comments/10000')
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found");
+                });
+        });
     });
 
 });
