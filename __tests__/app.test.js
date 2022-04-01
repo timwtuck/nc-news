@@ -326,7 +326,7 @@ describe('# PATCH REQUESTS', () => {
         });
     });
 
-    describe.only('PATCH /api/comments/:comment_id', () => {
+    describe('PATCH /api/comments/:comment_id', () => {
 
         test('200: returns updated comment with increased votes', () => {
             const patch = {inc_votes: 1};
@@ -360,7 +360,37 @@ describe('# PATCH REQUESTS', () => {
                     });
                 });   
         });
-    })
+        test('404: ID Not Found for valid non-existent ID', () => {
+            const patch = {inc_votes: -1};
+            return request(app)
+                .patch('/api/comments/100000')
+                .send(patch)
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe('ID Not Found');
+                });   
+        });
+        test('400: Invalid Patch Object', () => {
+            const patch = {};
+            return request(app)
+                .patch('/api/comments/1')
+                .send(patch)
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe('Invalid Patch Object');
+                });   
+        });
+        test('400: Invalid Data Type', () => {
+            const patch = {inc_votes: 'wrong_data_type'};
+            return request(app)
+                .patch('/api/comments/1')
+                .send(patch)
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe('Invalid Data Type');
+                });   
+        });
+    });
 });
 
 describe('# POST REQUESTS', () => {
