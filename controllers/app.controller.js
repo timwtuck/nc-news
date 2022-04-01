@@ -37,7 +37,7 @@ exports.getAllArticles = (req, res, next) => {
 
     articlesModel.selectAllArticles(sort_by, order, topic, limit, p)
         .then(articles => {
-            res.status(200).send({articles});
+            res.status(200).send(articles);
         })
         .catch(next);
 }

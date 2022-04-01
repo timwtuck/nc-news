@@ -31,9 +31,11 @@ exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic 
                     GROUP BY articles.article_id
                     ORDER BY ${sortBy} ${order}
                     LIMIT $2 OFFSET $3;`;
-              
+  
     const articles = await db.query(query, [topic, limit, offset]);
-    return articles.rows;
+    const total_count = await this._getTotalCount(topic);
+
+    return {articles: articles.rows, total_count};
 }
 
 exports.insertArticle = async (author, title, topic, body) => {
@@ -131,4 +133,13 @@ exports._validateInsert = async (author, title, topic, body) => {
 
     await this._validateAuthor(author);
     await this._validateTopic(topic, false);
+}
+
+exports._getTotalCount = async (topic) => {
+
+    const query = `SELECT COUNT(article_id)::INTEGER AS total_count FROM articles
+                    WHERE topic ILIKE $1;`;
+
+    const result = await db.query(query, [topic]);
+    return result.rows[0].total_count;
 }
