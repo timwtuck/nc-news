@@ -695,4 +695,30 @@ describe('# DELETE REQUESTS', () => {
         });
     });
 
+    describe('DELETE /api/articles/:article_id', () => {
+
+        test('204: Content deleted', () => {
+            return request(app)
+                .delete('/api/articles/1')
+                .expect(204)
+                .then(() => {
+                    return request(app)
+                        .get('/api/articles/1')
+                        .expect(404)
+                })
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found");
+                });
+        });
+
+        test('404: ID Not Found', () => {
+            return request(app)
+                .delete('/api/articles/10000')
+                .expect(404)
+                .then(({body}) => {
+                    expect(body.msg).toBe("ID Not Found");
+                });
+        });
+    });
+
 });
