@@ -628,6 +628,35 @@ describe('# POST REQUESTS', () => {
                 });
         });
     });
+
+    describe('POST /api/topics', () => {
+
+        test('201: Posted Topic returned', () => {
+            const post = {
+                "slug": "topic name here",
+                "description": "description here"
+            };
+            return request(app)
+                .post('/api/topics')
+                .send(post)
+                .expect(201)
+                .then(({body}) => {
+                    expect(body.topic).toMatchObject({
+                        "slug": "topic name here",
+                        "description": "description here"
+                    });
+                });
+        });
+        test('400: Invalid Post Object', () => {
+            return request(app)
+                .post('/api/topics')
+                .send({})
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Post Object");
+                });
+        });
+    });
 });
 
 describe('# DELETE REQUESTS', () => {
