@@ -325,6 +325,42 @@ describe('# PATCH REQUESTS', () => {
             });
         });
     });
+
+    describe.only('PATCH /api/comments/:comment_id', () => {
+
+        test('200: returns updated comment with increased votes', () => {
+            const patch = {inc_votes: 1};
+            return request(app)
+                .patch('/api/comments/1')
+                .send(patch)
+                .expect(200)
+                .then(({body}) => {
+                    expect(body.comment).toMatchObject({
+                        comment_id: 1,
+                        article_id: 9,
+                        author: 'butter_bridge',
+                        votes: 17,
+                        created_at: expect.any(String)
+                    });
+                });   
+        });
+        test('200: returns updated comment with decreased votes', () => {
+            const patch = {inc_votes: -1};
+            return request(app)
+                .patch('/api/comments/1')
+                .send(patch)
+                .expect(200)
+                .then(({body}) => {
+                    expect(body.comment).toMatchObject({
+                        comment_id: 1,
+                        article_id: 9,
+                        author: 'butter_bridge',
+                        votes: 15,
+                        created_at: expect.any(String)
+                    });
+                });   
+        });
+    })
 });
 
 describe('# POST REQUESTS', () => {
