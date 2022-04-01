@@ -90,6 +90,18 @@ exports.patchArticle = (req, res, next) => {
         .catch(next);
 }
 
+exports.patchCommentById = (req, res, next) => {
+
+    const {comment_id} = req.params;
+    const updateObj = req.body;
+
+    commentsModel.updateComment(comment_id, updateObj.inc_votes)
+        .then(comment => {
+            res.status(200).send({comment});
+        })
+        .catch(next);
+}
+
 
 /*************************************************
  * POST REQUESTS
