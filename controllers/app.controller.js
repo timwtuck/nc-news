@@ -160,3 +160,14 @@ exports.deleteCommentById = (req, res, next) => {
         })
         .catch(next);
 }
+
+exports.deleteArticleById = (req, res, next) => {
+    
+    const {article_id} = req.params;
+
+    articlesModel.deleteArticleById(article_id)
+        .then(() => {
+            res.status(204).send();
+        })
+        .catch(next);
+}

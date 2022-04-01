@@ -74,6 +74,19 @@ exports.updateArticle = async (id, adjustedVotes) => {
     return res.rows[0];
 }
 
+exports.deleteArticleById = async (id) => {
+
+    
+    const query = `DELETE FROM articles
+            WHERE article_id = $1
+            RETURNING *;`;
+
+    const res = await db.query(query, [id]);
+
+    if (res.rows.length === 0)
+        return Promise.reject(errors.idNotFoundObj);
+}
+
 
 /********************************************************
  *              PRIVATE METHODS
