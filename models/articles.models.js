@@ -11,13 +11,17 @@ const errors = require('../errors.js');
 
 exports.selectArticle = async (id) => {
 
-    const promises = [];
-    promises.push(this._selectByArticleId(id));
-    promises.push(commentsModel.selectByArticleId(id));
+    const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
+                    LEFT JOIN comments ON comments.article_id = articles.article_id
+                    WHERE articles.article_id = $1
+                    GROUP BY articles.article_id;`;
+  
+    const results = await db.query(query, [id]);
 
-    const [article, comments] = await Promise.all(promises);
-    article.comment_count = comments.length;
-    return article;
+    if (results.rows.length === 0)
+        return Promise.reject(errors.idNotFoundObj);
+
+    return results.rows[0];
 }
 
 exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%', limit = 10, page =1) => {

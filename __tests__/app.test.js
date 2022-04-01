@@ -242,7 +242,7 @@ describe('# GET REQUESTS', () => {
 
         test('200: Returns array of comments for given article_id', () => {
             return request(app)
-                .get('/api/articles/1/comments')
+                .get('/api/articles/1/comments?limit=100')
                 .expect(200)
                 .then(({body}) => {
                     body.comments.forEach(comment => {
@@ -266,6 +266,33 @@ describe('# GET REQUESTS', () => {
                 .expect(200)
                 .then(({body}) => {
                     expect(body.comments.length).toBe(0);
+                });
+        });
+        test('200: returns paginated results', () => {
+            let p1;
+            return request(app)
+                .get('/api/articles/1/comments?limit=5')
+                .expect(200)
+                .then(({body}) => {
+
+                    p1 = body.comments;
+                    expect(p1.length).toBe(5);
+                    expect(p1).toBeSortedBy('comment_id', {ascending:true});
+                    return request(app)
+                        .get('/api/articles/1/comments?limit=5&p=2')
+                        .expect(200);
+                })
+                .then(({body}) => {
+                    const p2 = body.comments;
+                    expect(p2.length).toBe(5);
+                    expect(p2).toBeSortedBy('comment_id', {ascending:true});
+                    expect(p2[0].comment_id > p1[4].comment_id).toBe(true);
+                    return request(app)
+                        .get('/api/articles/1/comments?limit=5&p=3')
+                        .expect(200);
+                })
+                .then(({body}) => {
+                    expect(body.comments.length).toBe(1);
                 });
         });
         
