@@ -165,6 +165,38 @@ describe('# GET REQUESTS', () => {
                     expect(body.msg).toBe("Invalid Query Item");
                 });
         });
+        test('400: invalid limit query (date type)', () => {
+            return request(app)
+                .get('/api/articles?limit=not_valid_limit')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Data Type");
+                });
+        });
+        test('400: invalid limit query (value)', () => {
+            return request(app)
+                .get('/api/articles?limit=-1')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Query Item");
+                });
+        });
+        test('400: invalid page query (data type)', () => {
+            return request(app)
+                .get('/api/articles?limit=5&p=not_a_page')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Data Type");
+                });
+        });
+        test('400: invalid page query (value)', () => {
+            return request(app)
+                .get('/api/articles?limit=10&p=-1')
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Query Item");
+                });
+        });
         test('404: non-existent topic query', () => {
             return request(app)
                 .get('/api/articles?topic=not_a_topic')

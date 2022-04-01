@@ -22,7 +22,7 @@ exports.selectArticle = async (id) => {
 
 exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%', limit = 10, page =1) => {
 
-    await this._validateInput({sortBy, order, topic});
+    await this._validateInput({sortBy, order, topic, limit, page});
 
     const offset =  limit * (page - 1);   
     const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
@@ -99,6 +99,11 @@ exports._validateInput = async (input) => {
         (input.order && !validOrder.includes(input.order))){
 
         return Promise.reject(errors.invalidQueryObj);
+    }
+console.log(typeof input.limit, input.limit)
+    if (input.limit <= 0 || input.page <= 0){
+            console.log('here!')
+            return Promise.reject(errors.invalidQueryObj);
     }
 
     return this._validateTopic(input.topic);
