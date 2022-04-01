@@ -4,7 +4,8 @@ const controller = require('../controllers/app.controller.js');
 router.delete('/:comment_id', controller.deleteCommentById);
 
 router.route('/')
-    .get(controller.getAllArticles);
+    .get(controller.getAllArticles)
+    .post(controller.postArticle);
 
 router.route('/:article_id')
     .get(controller.getArticle)

@@ -107,6 +107,18 @@ exports.patchCommentById = (req, res, next) => {
  * POST REQUESTS
  ************************************************/
 
+exports.postArticle = (req, res, next) => {
+
+    const article = req.body;
+
+    articlesModel.insertArticle(article.author, article.title,
+        article.topic, article.body)
+        .then(article => {
+            res.status(201).send({article});
+        })
+        .catch(next);
+}
+
 exports.postCommentByArticleId = (req, res, next) => {
 
     const {article_id} = req.params;
@@ -119,6 +131,7 @@ exports.postCommentByArticleId = (req, res, next) => {
         })
         .catch(next);
 }
+
 
 
 /*************************************************

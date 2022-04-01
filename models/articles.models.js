@@ -2,6 +2,7 @@ const db = require('../db/connection.js');
 const format = require('pg-format');
 const commentsModel = require('./comments.models.js');
 const topicsModel = require('./topics.models.js');
+const usersModel = require('./users.models.js');
 const errors = require('../errors.js');
 
 /********************************************************
@@ -32,6 +33,22 @@ exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic 
     const articles = await db.query(query, [topic]);
 
     return articles.rows;
+}
+
+exports.insertArticle = async (author, title, topic, body) => {
+
+    await this._validateInsert(author, title, topic, body);
+
+    const query = `INSERT INTO articles
+                    (author, title, topic, body)
+                    VALUES
+                    ($1, $2, $3, $4)
+                    RETURNING *;`;
+
+
+
+    const result = await db.query(query, [author, title, topic, body]);
+    return result.rows[0];
 }
 
 
@@ -87,14 +104,33 @@ exports._validateInput = async (input) => {
     return this._validateTopic(input.topic);
 }
 
-exports._validateTopic = async (topic) => {
+exports._validateTopic = async (topic, query=true) => {
 
-    if (!topic || topic === '%%')
+    if (query && (!topic || topic === '%%'))
         return;
 
     const results = await topicsModel.selectTopics();
     const topics = results.map(topic => topic.slug);
     
     if(!topics.includes(topic))
-        return Promise.reject(errors.queryNotFoundObj);
+        return Promise.reject(query ? errors.queryNotFoundObj
+                                    : errors.invalidPostObj);
+}
+
+exports._validateAuthor = async (username) => {
+
+    const results = await usersModel.selectUsers();
+    const usernames = results.map(user => user.username);
+
+    if(!usernames.includes(username))
+        return Promise.reject(errors.invalidPostObj);
+}
+
+exports._validateInsert = async (author, title, topic, body) => {
+
+    if (!title || !body)
+        return Promise.reject(errors.invalidPostObj);
+
+    await this._validateAuthor(author);
+    await this._validateTopic(topic, false);
 }
