@@ -628,6 +628,26 @@ describe('# POST REQUESTS', () => {
                 });
         });
     });
+
+    describe.only('POST /api/topics', () => {
+
+        test('201: Posted Topic returned', () => {
+            const post = {
+                "slug": "topic name here",
+                "description": "description here"
+            };
+            return request(app)
+                .post('/api/topics')
+                .send(post)
+                .expect(201)
+                .then(({body}) => {
+                    expect(body.topic).toMatchObject({
+                        "slug": "topic name here",
+                        "description": "description here"
+                    });
+                });
+        });
+    });
 });
 
 describe('# DELETE REQUESTS', () => {
