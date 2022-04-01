@@ -60,7 +60,7 @@ describe('# GET REQUESTS', () => {
 
         test('200: returns all articles', () => {
             return request(app)
-                .get('/api/articles')
+                .get('/api/articles?limit=20')
                 .expect(200)
                 .then(({body}) => {
 
@@ -85,7 +85,7 @@ describe('# GET REQUESTS', () => {
         });
         test('200: returns sorted articles (default desc)', () => {
             return request(app)
-                .get('/api/articles?sort_by=title')
+                .get('/api/articles?sort_by=title&limit=20')
                 .expect(200)
                 .then(({body}) => {
                     expect(body.articles.length).toBe(12);
@@ -94,7 +94,7 @@ describe('# GET REQUESTS', () => {
         });
         test('200: returns sorted articles asc', () => {
             return request(app)
-                .get('/api/articles?sort_by=created_at&order=asc')
+                .get('/api/articles?sort_by=created_at&order=asc&limit=20')
                 .expect(200)
                 .then(({body}) => {
                     expect(body.articles.length).toBe(12);
@@ -108,6 +108,27 @@ describe('# GET REQUESTS', () => {
                 .then(({body}) => {
                     expect(body.articles.length).toBe(1);
                     expect(body.articles[0].topic).toBe('cats');
+                });
+        });
+        test('200: returns paginated articles (only 5)', () => {
+            let p1;
+            return request(app)
+                .get('/api/articles?sort_by=author&order=asc&limit=5&p=1')
+                .expect(200)
+                .then(({body}) => {
+                    p1 = body.articles;
+                    expect(p1.length).toBe(5);
+                    expect(p1).toBeSorted('author', {ascending:true});
+
+                    return request(app)
+                        .get('/api/articles?sort_by=author&order=asc&limit=5&p=2')
+                        .expect(200);
+                })
+                .then(({body}) => {
+                    const p2 = body.articles;
+                    expect(p2.length).toBe(5);
+                    expect(p2).toBeSortedBy('author', {ascending:true});
+                    expect(p1[4].author <= p2[0].author).toBe(true);
                 });
         });
         test('400: invalid sort_by query', () => {
@@ -136,7 +157,6 @@ describe('# GET REQUESTS', () => {
         });
     });
   
-
     describe('GET /api/articles/:article_id', () => {
 
         test('200: returns article at article_id', () => {

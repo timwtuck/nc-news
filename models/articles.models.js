@@ -20,18 +20,19 @@ exports.selectArticle = async (id) => {
     return article;
 }
 
-exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%') => {
+exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%', limit = 10, page =1) => {
 
     await this._validateInput({sortBy, order, topic});
-    
+
+    const offset =  limit * (page - 1);   
     const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
                     LEFT JOIN comments ON comments.article_id = articles.article_id
                     WHERE topic ILIKE $1
                     GROUP BY articles.article_id
-                    ORDER BY ${sortBy} ${order};`;
+                    ORDER BY ${sortBy} ${order}
+                    LIMIT $2 OFFSET $3;`;
               
-    const articles = await db.query(query, [topic]);
-
+    const articles = await db.query(query, [topic, limit, offset]);
     return articles.rows;
 }
 
@@ -45,12 +46,9 @@ exports.insertArticle = async (author, title, topic, body) => {
                     ($1, $2, $3, $4)
                     RETURNING *;`;
 
-
-
     const result = await db.query(query, [author, title, topic, body]);
     return result.rows[0];
 }
-
 
 exports.updateArticle = async (id, adjustedVotes) => {
 
@@ -91,7 +89,7 @@ exports._selectByArticleId = async (id) => {
 exports._validateInput = async (input) => {
 
     const validSort = ['title', 'article_id', 'topic', 
-                        'created_at', 'votes', 'comment_count'];
+                        'created_at', 'votes', 'comment_count', 'author'];
 
     const validOrder = ['asc', 'desc'];
 
