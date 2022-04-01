@@ -629,7 +629,7 @@ describe('# POST REQUESTS', () => {
         });
     });
 
-    describe.only('POST /api/topics', () => {
+    describe('POST /api/topics', () => {
 
         test('201: Posted Topic returned', () => {
             const post = {
@@ -645,6 +645,15 @@ describe('# POST REQUESTS', () => {
                         "slug": "topic name here",
                         "description": "description here"
                     });
+                });
+        });
+        test('400: Invalid Post Object', () => {
+            return request(app)
+                .post('/api/topics')
+                .send({})
+                .expect(400)
+                .then(({body}) => {
+                    expect(body.msg).toBe("Invalid Post Object");
                 });
         });
     });
