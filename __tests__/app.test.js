@@ -435,6 +435,33 @@ describe('# POST REQUESTS', () => {
                 });
         })
     });
+
+    describe.only('POST /api/articles', () => {
+
+        test('201: Returns posted article object with correct properties', () => {
+            const post = {
+                author: 'rogersop', 
+                title:'Another Article',
+                body: 'My first cat was called Blackie',
+                topic: 'cats'};
+            return request(app)
+                .post('/api/articles')
+                .send(post)
+                .expect(201)
+                .then(({body}) => {
+                    expect(body.article).toMatchObject({
+                        article_id: 13,
+                        author: 'rogersop', 
+                        title:'Another Article',
+                        body: 'My first cat was called Blackie',
+                        topic: 'cats',
+                        created_at: expect.any(String),
+                        votes: 0
+                    });
+                });
+        });
+
+    });
 });
 
 describe('# DELETE REQUESTS', () => {
