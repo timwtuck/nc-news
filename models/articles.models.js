@@ -96,14 +96,10 @@ exports._validateInput = async (input) => {
     const validOrder = ['asc', 'desc'];
 
     if ((input.sortBy && !validSort.includes(input.sortBy)) ||
-        (input.order && !validOrder.includes(input.order))){
+        (input.order && !validOrder.includes(input.order)) ||
+        (input.limit <= 0 || input.page <= 0)){
 
         return Promise.reject(errors.invalidQueryObj);
-    }
-console.log(typeof input.limit, input.limit)
-    if (input.limit <= 0 || input.page <= 0){
-            console.log('here!')
-            return Promise.reject(errors.invalidQueryObj);
     }
 
     return this._validateTopic(input.topic);
