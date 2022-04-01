@@ -132,5 +132,5 @@ exports._validateInsert = async (author, title, topic, body) => {
         return Promise.reject(errors.invalidPostObj);
 
     await this._validateAuthor(author);
-    await this._validateTopic(topic);
+    await this._validateTopic(topic, false);
 }
