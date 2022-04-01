@@ -20,19 +20,22 @@ exports.selectArticle = async (id) => {
     return article;
 }
 
-exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%') => {
+exports.selectAllArticles = async (sortBy = 'created_at', order = 'desc', topic = '%%', limit = 10, page =1) => {
 
-    await this._validateInput({sortBy, order, topic});
-    
+    await this._validateInput({sortBy, order, topic, limit, page});
+
+    const offset =  limit * (page - 1);   
     const query = `SELECT articles.*, COUNT(comment_id)::INTEGER AS comment_count FROM articles
                     LEFT JOIN comments ON comments.article_id = articles.article_id
                     WHERE topic ILIKE $1
                     GROUP BY articles.article_id
-                    ORDER BY ${sortBy} ${order};`;
-              
-    const articles = await db.query(query, [topic]);
+                    ORDER BY ${sortBy} ${order}
+                    LIMIT $2 OFFSET $3;`;
+  
+    const articles = await db.query(query, [topic, limit, offset]);
+    const total_count = await this._getTotalCount(topic);
 
-    return articles.rows;
+    return {articles: articles.rows, total_count};
 }
 
 exports.insertArticle = async (author, title, topic, body) => {
@@ -45,12 +48,9 @@ exports.insertArticle = async (author, title, topic, body) => {
                     ($1, $2, $3, $4)
                     RETURNING *;`;
 
-
-
     const result = await db.query(query, [author, title, topic, body]);
     return result.rows[0];
 }
-
 
 exports.updateArticle = async (id, adjustedVotes) => {
 
@@ -91,12 +91,13 @@ exports._selectByArticleId = async (id) => {
 exports._validateInput = async (input) => {
 
     const validSort = ['title', 'article_id', 'topic', 
-                        'created_at', 'votes', 'comment_count'];
+                        'created_at', 'votes', 'comment_count', 'author'];
 
     const validOrder = ['asc', 'desc'];
 
     if ((input.sortBy && !validSort.includes(input.sortBy)) ||
-        (input.order && !validOrder.includes(input.order))){
+        (input.order && !validOrder.includes(input.order)) ||
+        (input.limit <= 0 || input.page <= 0)){
 
         return Promise.reject(errors.invalidQueryObj);
     }
@@ -133,4 +134,13 @@ exports._validateInsert = async (author, title, topic, body) => {
 
     await this._validateAuthor(author);
     await this._validateTopic(topic, false);
+}
+
+exports._getTotalCount = async (topic) => {
+
+    const query = `SELECT COUNT(article_id)::INTEGER AS total_count FROM articles
+                    WHERE topic ILIKE $1;`;
+
+    const result = await db.query(query, [topic]);
+    return result.rows[0].total_count;
 }

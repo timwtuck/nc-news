@@ -33,11 +33,11 @@ exports.getArticle = (req, res, next) => {
 
 exports.getAllArticles = (req, res, next) => {
 
-    const {sort_by, order, topic} = req.query;
+    const {sort_by, order, topic, limit, p} = req.query;
 
-    articlesModel.selectAllArticles(sort_by, order, topic)
+    articlesModel.selectAllArticles(sort_by, order, topic, limit, p)
         .then(articles => {
-            res.status(200).send({articles});
+            res.status(200).send(articles);
         })
         .catch(next);
 }
