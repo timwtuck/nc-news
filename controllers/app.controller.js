@@ -33,9 +33,9 @@ exports.getArticle = (req, res, next) => {
 
 exports.getAllArticles = (req, res, next) => {
 
-    const {sort_by, order, topic, limit, p} = req.query;
+    const {sort_by, order, topic, limit, p, author} = req.query;
 
-    articlesModel.selectAllArticles(sort_by, order, topic, limit, p)
+    articlesModel.selectAllArticles(sort_by, order, topic, author, limit, p)
         .then(articles => {
             res.status(200).send(articles);
         })
