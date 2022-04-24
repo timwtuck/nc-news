@@ -108,6 +108,16 @@ describe('# GET REQUESTS', () => {
                 .then(({body}) => {
                     expect(body.articles.length).toBe(1);
                     expect(body.articles[0].topic).toBe('cats');
+
+                    // test for authors aswell
+                    return request(app)
+                        .get('/api/articles?author=rogersop')
+                        .expect(200)
+                })
+                .then(({body}) => {
+                    expect(body.articles.length > 0).toBe(true);
+                    body.articles.forEach((article) =>
+                        expect(article.author).toBe('rogersop'));
                 });
         });
         test('200: returns paginated articles (only 5)', () => {
